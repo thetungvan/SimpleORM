@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import simpleorm.Connector.ConnectionUtils;
+import simpleorm.Connector.ConnectorFactory;
 
 /**
  *
@@ -21,16 +22,17 @@ public class SimpleORM {
 
     /**
      * @param args the command line arguments
+     * @throws java.lang.ClassNotFoundException
      */
     public static void main(String[] args) throws ClassNotFoundException {
         // TODO code application logic here
         try {
-
-            Connection conn = ConnectionUtils.getMyConnection();
+            ConnectorFactory.loadDatasourceConfig("/simpleorm/Connector/datasource.json");
             ModelMapper.load("/config/ModelConfig.json");
+            Connection conn = ConnectorFactory.getConnection();
             System.out.println(ModelMapper.get());
 
-        } catch (FileNotFoundException | ClassNotFoundException | SQLException ex) {
+        } catch (FileNotFoundException | SQLException ex) {
             Logger.getLogger(SimpleORM.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

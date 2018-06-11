@@ -20,7 +20,7 @@ public class ConnectionUtils {
 
     public static Connection getMyConnection() throws SQLException,
             ClassNotFoundException {
-        return Connector.getConnection();
+        return ConnectorFactory.getConnection();
     }
 
     public static ResultSet QuerrySelect(String querry) throws SQLException {
