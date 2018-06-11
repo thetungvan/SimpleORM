@@ -16,10 +16,10 @@ import simpleorm.Connector.ConnectionUtils;
 public abstract class GateWay {
 
     //find allby table's name
-    public ResultSet findAll(String name) throws ClassNotFoundException {
+    public ResultSet findAll(String tableName) throws ClassNotFoundException {
         try {
-            System.out.println("Name:" + name);
-            String sql = "Select * from " + name;
+            System.out.println("Name:" + tableName);
+            String sql = "Select * from " + tableName;
 
             // Thực thi câu lệnh SQL trả về đối tượng ResultSet.
             Connection conn = ConnectionUtils.getMyConnection();
@@ -36,7 +36,7 @@ public abstract class GateWay {
         return null;
     }
     //find by attribute(s)
-    public ResultSet findByAttribute(String[] attr) throws ClassNotFoundException {
+    public ResultSet findByAttribute(String tableName, String[] attr, String condition) throws ClassNotFoundException {
         try {
             String sql = "Select ";
             for (String single_attr : attr){
@@ -44,6 +44,8 @@ public abstract class GateWay {
                 sql += ",";
             }
             sql.substring(0, sql.length() - 1);
+            
+            sql+= " From " + tableName + " WHERE " + condition;
             // Thực thi câu lệnh SQL trả về đối tượng ResultSet.
             Connection conn = ConnectionUtils.getMyConnection();
             Statement statement = conn.createStatement();
