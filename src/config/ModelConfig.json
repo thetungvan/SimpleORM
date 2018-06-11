@@ -1,0 +1,18 @@
+[
+    {
+        "className": "student",
+        "tableName" : "student",
+        "properties": [
+            {
+                "name": "ID",
+                "type": "int",
+                "primary": true
+            },
+            {
+                "name": "name",
+                "type": "String",
+                "primary": false
+            }
+        ]
+    }
+]
