@@ -111,7 +111,7 @@ public class DataMapper<T> {
         return null;
     }
     
-    public void insert(String[] columns, String[] values){
+    public void insert(String[] columns, Object[] values){
         try {
             GateWay.insert(className, columns, values);
         } catch (ClassNotFoundException ex) {
@@ -119,17 +119,25 @@ public class DataMapper<T> {
         }
     }
     
-    public void update(String[] columns, String[] values, String condition){
+    public void update(String[] columns, Object[] values, String[] columncondition, Object[] condition){
         try {
-            GateWay.update(className, columns, values, condition);
+            GateWay.update(className, columns, values, columncondition, condition);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(DataMapper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    public void delete(String column, String value){
+    public void delete( String[] columns, Object[] values){
         try {
-            GateWay.delete(className, column, value);
+            GateWay.delete(className, columns, values);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(DataMapper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void deleteAll(){
+        try {
+            GateWay.DeleteAll(className);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(DataMapper.class.getName()).log(Level.SEVERE, null, ex);
         }
