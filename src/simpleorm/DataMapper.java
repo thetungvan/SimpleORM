@@ -67,7 +67,7 @@ public class DataMapper<T> {
                     int size_of_props = ModelMapper.modelConfigs.get(className).properties.size();
                     if (size_of_props != fields.length){
                         break;
-                    }
+                    }//check if number of properties in json file == number of attributes declared in class
                     for (int i = 0; i < fields.length; i++)
                     {
                         String fieldName = fields[i].getName();
@@ -88,19 +88,21 @@ public class DataMapper<T> {
         List<T> res = new ArrayList<>();
         try (ResultSet resSet = GateWay.findByAttribute(className, collumnName, condition)){
             while (resSet.next()){
-                T newObject = getInstance();
+                String strScr = getMyType().getName();
+                Object newObject = Class.forName(strScr).newInstance();
                 Field[] fields = newObject.getClass().getDeclaredFields();
-                int size_of_props = ModelMapper.modelConfigs.get(null).properties.size();
+                int size_of_props = ModelMapper.modelConfigs.get(className).properties.size();
                 if (size_of_props != fields.length){
                     break;
                 }
                 for (int i = 0; i < fields.length; i++)
                 {
-                    Field f = newObject.getClass().getDeclaredField(fields[i].getType().getSimpleName());
+                    String fieldName = fields[i].getName();
+                    Field f = newObject.getClass().getDeclaredField(fieldName);
                     f.setAccessible(true);
-                    f.set(newObject, ModelMapper.modelConfigs.get(null).properties.get(i));
+                    f.set(newObject, resSet.getObject(fieldName));
                 }
-                res.add(newObject);
+                res.add((T) newObject);
             }
             return res;
         } catch (ClassNotFoundException | SQLException ex) {
@@ -109,7 +111,7 @@ public class DataMapper<T> {
         return null;
     }
     
-    public void insert(String[] columns, String[] values){
+    public void insert(String[] columns, Object[] values){
         try {
             GateWay.insert(className, columns, values);
         } catch (ClassNotFoundException ex) {
@@ -117,17 +119,25 @@ public class DataMapper<T> {
         }
     }
     
-    public void update(String[] columns, String[] values, String condition){
+    public void update(String[] columns, Object[] values, String[] columncondition, Object[] condition){
         try {
-            GateWay.update(className, columns, values, condition);
+            GateWay.update(className, columns, values, columncondition, condition);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(DataMapper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    public void delete(String column, String value){
+    public void delete( String[] columns, Object[] values){
         try {
-            GateWay.delete(className, column, value);
+            GateWay.delete(className, columns, values);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(DataMapper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void deleteAll(){
+        try {
+            GateWay.DeleteAll(className);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(DataMapper.class.getName()).log(Level.SEVERE, null, ex);
         }

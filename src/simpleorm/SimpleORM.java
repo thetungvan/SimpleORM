@@ -34,36 +34,66 @@ public class SimpleORM {
             ModelMapper.load("/config/ModelConfig.json");
             String fieldType = ModelMapper.modelConfigs.get("student").properties.get("ID").type;
             System.out.println(fieldType);
-            String[] columns = {"name"};
-            Object[] values = {"Toong"};
-            String[] columncondition={"ID"};
-            Object[] condition = {1412557};
-            Connection conn = ConnectorFactory.getConnection();
-            conn.close();
+            //String condition = "Id= ahihi";
+            //GateWay.update("student", columns, values, condition);
+            //GateWay.insert("student",columns,values);
+            //ResultSet rs = GateWay.findByAttribute("student", "ID", 1412410);
             //GateWay.DeleteAll("student");
             //GateWay.update("student", columns, values, columncondition,condition);
-            //GateWay.insert("student",columns,values);
-            /*ResultSet rs = GateWay.findByAttribute("student", "ID", 1412557);
-            //DataMapper<student> newDM = new DataMapper<student>(student.class);
-            while (rs.next()) {// Di chuyển con trỏ xuống bản ghi kế tiếp.
-                int MAHS = rs.getInt(1);
-                String ten = rs.getString(2);
-                System.out.println("--------------------");
-                System.out.println("EmpId:" + MAHS);
-                System.out.println("EmpNo:" + ten);
-            }*/
-            /*System.out.println("-----------------DATAMAPPER TEST--------------------");
+            DataMapper<student> newDM = new DataMapper<student>(student.class);
+            System.out.println("-----------------DATAMAPPER TEST--------------------");
             List<student> resList = new ArrayList<>();
+            
+            //DELETE
+            /*
+            String[] columns = {"name"};//column's name to search for value
+            String[] values ={"Smileyface2"};//value to search for deleting
+            newDM.delete(columns, values);
+            */
+            
+            //DELETE ALL
+            //newDM.deleteAll();
+            
+            //UPDATE
+            /*
+            String[] columns = {"name"};
+            Object[] values = {"SmileyFace2"};//collum to change
+            String[] columncondition={"ID"};
+            Object[] condition = {343434};
+            newDM.update(columns, values, columncondition, condition);
+            */
+            
+            
+            //INSERT
+            /*
+            System.out.println("----insert------------");
+            String[] columns = {"ID","name"};
+            Object[] values = {343434,"SmileyFace"};
+            newDM.insert(columns, values);
+            */
+            
             try {
                 resList = newDM.findAll();
+                System.out.println("----findAll------------");
+                for (int i = 0; i < resList.size() ; i++)
+                {
+                    System.out.println(resList.get(i).getID() + " : " + resList.get(i).getName());
+                }
             } catch (Exception ex) {
                 Logger.getLogger(SimpleORM.class.getName()).log(Level.SEVERE, null, ex);
             }
-            System.out.println("size : " + resList.size());
-            for (int i = 0; i < resList.size() ; i++)
-            {
-                System.out.println(resList.get(i).getID() + resList.get(i).getName());
-            }*/
+            
+            
+            try {
+                resList = newDM.findByAttribute("ID", "343434");
+                System.out.println("------findByAttribute-----------------");
+                for (int i = 0; i < resList.size() ; i++)
+                {
+                    System.out.println(resList.get(i).getID() + " : " +  resList.get(i).getName());
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(SimpleORM.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
         } catch (FileNotFoundException ex) {
             Logger.getLogger(SimpleORM.class.getName()).log(Level.SEVERE, null, ex);
