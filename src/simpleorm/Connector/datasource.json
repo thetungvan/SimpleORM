@@ -1,0 +1,9 @@
+{
+    "connector": "mysql",
+    "hostName": "sql12.freemysqlhosting.net",
+    "database": "sql12242253",
+    "userName": "sql12242253",
+    "password": "McKznSF2Lf",
+    "portNumber": "3306",
+    "instanceName": ""
+}
