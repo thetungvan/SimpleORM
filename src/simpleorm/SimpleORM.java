@@ -67,10 +67,11 @@ public class SimpleORM {
             //INSERT
             /*
             System.out.println("----insert------------");
-            String[] columns = {"ID","name"};
-            Object[] values = {343434,"SmileyFace"};
-            newDM.insert(columns, values);
-            */
+            student a = new student();
+            a.setID(34);
+            a.setName("Smile");
+            newDM.insert(a);
+           */
             
             try {
                 resList = newDM.findAll();
