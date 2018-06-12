@@ -35,7 +35,6 @@ public class SimpleORM {
             String fieldType = ModelMapper.modelConfigs.get("student").properties.get("ID").type;
             System.out.println(fieldType);
             ResultSet rs = GateWay.findByAttribute("student", "ID", "1412628");
-            DataMapper<student> newDM = new DataMapper<student>(student.class);
             while (rs.next()) {// Di chuyển con trỏ xuống bản ghi kế tiếp.
                 int MAHS = rs.getInt(1);
                 String ten = rs.getString(2);
@@ -44,6 +43,8 @@ public class SimpleORM {
                 System.out.println("EmpNo:" + ten);
             }
             System.out.println("-----------------DATAMAPPER TEST--------------------");
+            System.out.println("----------findAll---");
+            DataMapper<student> newDM = new DataMapper<student>(student.class);
             List<student> resList = new ArrayList<>();
             try {
                 resList = newDM.findAll();
@@ -53,7 +54,17 @@ public class SimpleORM {
             System.out.println("size : " + resList.size());
             for (int i = 0; i < resList.size() ; i++)
             {
-                System.out.println(resList.get(i).getID() + resList.get(i).getName());
+                System.out.println(resList.get(i).getID() + " : " + resList.get(i).getName());
+            }
+            System.out.println("---------findByAttribute----");
+            try {
+                resList = newDM.findByAttribute("ID", "1412563");
+                for (int i = 0; i < resList.size() ; i++)
+                {
+                    System.out.println(resList.get(i).getID() + " : " + resList.get(i).getName());
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(SimpleORM.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         } catch (FileNotFoundException | SQLException ex) {

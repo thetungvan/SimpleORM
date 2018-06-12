@@ -67,7 +67,7 @@ public class DataMapper<T> {
                     int size_of_props = ModelMapper.modelConfigs.get(className).properties.size();
                     if (size_of_props != fields.length){
                         break;
-                    }
+                    }//check if number of properties in json file == number of attributes declared in class
                     for (int i = 0; i < fields.length; i++)
                     {
                         String fieldName = fields[i].getName();
@@ -88,19 +88,21 @@ public class DataMapper<T> {
         List<T> res = new ArrayList<>();
         try (ResultSet resSet = GateWay.findByAttribute(className, collumnName, condition)){
             while (resSet.next()){
-                T newObject = getInstance();
+                String strScr = getMyType().getName();
+                Object newObject = Class.forName(strScr).newInstance();
                 Field[] fields = newObject.getClass().getDeclaredFields();
-                int size_of_props = ModelMapper.modelConfigs.get(null).properties.size();
+                int size_of_props = ModelMapper.modelConfigs.get(className).properties.size();
                 if (size_of_props != fields.length){
                     break;
                 }
                 for (int i = 0; i < fields.length; i++)
                 {
-                    Field f = newObject.getClass().getDeclaredField(fields[i].getType().getSimpleName());
+                    String fieldName = fields[i].getName();
+                    Field f = newObject.getClass().getDeclaredField(fieldName);
                     f.setAccessible(true);
-                    f.set(newObject, ModelMapper.modelConfigs.get(null).properties.get(i));
+                    f.set(newObject, resSet.getObject(fieldName));
                 }
-                res.add(newObject);
+                res.add((T) newObject);
             }
             return res;
         } catch (ClassNotFoundException | SQLException ex) {
