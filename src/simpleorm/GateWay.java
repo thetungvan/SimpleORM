@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 import simpleorm.Connector.ConnectionUtils;
 import simpleorm.Connector.ConnectorFactory;
 
+
 public abstract class GateWay {
 
     //find allby table's name
@@ -35,18 +36,16 @@ public abstract class GateWay {
         return null;
     }
     //find by attribute(s)
-    public static ResultSet findByAttribute(String tableName, String ColumnName, String Condition) throws ClassNotFoundException {
+    public static ResultSet findByAttribute(String tableName, String ColumnName, Object Condition) throws ClassNotFoundException {
         try {
-            String fieldType = ModelMapper.modelConfigs.get("student").properties.get(ColumnName).type;
-            int inttype = Integer.parseInt(Condition);
             String sql = "Select * from " + tableName + " where " + ColumnName + " = ?";
             System.out.println(sql);
             // Thực thi câu lệnh SQL trả về đối tượng ResultSet.
-            Connection conn = ConnectionUtils.getMyConnection();
+            Connection conn = ConnectorFactory.getConnection();
             
             PreparedStatement pstm = conn.prepareStatement(sql);
+            pstm.setObject(1, Condition);
             
-            pstm.setInt(1, inttype);
             ResultSet rs = pstm.executeQuery();
             return rs;
         } catch (SQLException ex) {
@@ -56,58 +55,68 @@ public abstract class GateWay {
         
     }
     //insert
-    public static void insert(String tableName, String[] columns, String[] values) throws ClassNotFoundException {
-        try {
-            if (columns.length == values.length)
-            {
-                String sql = "INSERT INTO " + tableName + " (";
+    public static void insert(String tableName, String[] columns, Object[] values) throws ClassNotFoundException {
+        if (columns.length == values.length)
+        {
+            try {
+                String sql = "INSERT INTO " + tableName + "(";
                 for (String single_com : columns){
                     sql += single_com;
                     sql += ",";
                 }
-                sql.substring(0, sql.length() - 1);
+                sql = sql.substring(0, sql.length() - 1);
                 sql += ") VALUES (";
-
-                for (String single_val : values){
-                    sql += single_val;
+                
+                for (Object single_val : values){
+                    sql += '?';
                     sql += ",";
                 }
-
-                sql.substring(0, sql.length() - 1);
+                
+                sql = sql.substring(0, sql.length() - 1);
                 sql += ")";
-
+                
+                
+                System.out.println(sql);
                 // Thực thi câu lệnh SQL trả về đối tượng ResultSet.
-                Connection conn = ConnectionUtils.getMyConnection();
-                Statement statement = conn.createStatement();
-                statement.executeUpdate(sql);
+                Connection conn = ConnectorFactory.getConnection();
+                PreparedStatement pstm = conn.prepareStatement(sql);
+                for(int i =0;i<columns.length;i++){
+                    String fieldType=ModelMapper.modelConfigs.get(tableName).properties.get(columns[i]).type;
+                    /*if(fieldType.equals("int")){
+                        int inttype = Integer.parseInt(values[i]);
+                        pstm.setInt(i+1, inttype);
+                        System.out.println(inttype);
+                    }
+                    else if(fieldType.equals("String")){
+                        pstm.setString(i+1, values[i]);
+                        System.out.println(values[i]);
+                    }*/
+                    pstm.setObject(i+1, values[i]);
+                    
+                    
+                }
+                pstm.executeUpdate();
+                System.out.println("Insert completed");
                 conn.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(GateWay.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(GateWay.class.getName()).log(Level.SEVERE, null, ex);
         }
         
     }
     //update
-    public static void update(String tableName, String[] columns, String[] values, String condition) throws ClassNotFoundException {
-        try {
-            if (columns.length == values.length)
-            {
-                String sql = "UPDATE  " + tableName + " SET ";
-                for (int i = 0; i < columns.length; i++){
-                    sql+= columns[i] + " = " + values[i] + ", ";
-                }
-
-                sql.substring(0, sql.length() - 1);
-                sql += " WHERE " + condition;
-
-                // Thực thi câu lệnh SQL trả về đối tượng ResultSet.
-                Connection conn = ConnectionUtils.getMyConnection();
-                Statement statement = conn.createStatement();
-                statement.executeUpdate(sql);
-                conn.close();
+    public static void update(String tableName, String[] columns, Object[] values, Object condition) throws ClassNotFoundException {
+        if (columns.length == values.length)
+        {
+            String sql = "UPDATE  " + tableName + " SET ";
+            for (int i = 0; i < columns.length; i++){
+                sql+= columns[i] + " = " + values[i] + ", ";
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(GateWay.class.getName()).log(Level.SEVERE, null, ex);
+            
+            sql = sql.substring(0, sql.length() - 2);
+            sql += " WHERE " + condition;
+            System.out.println(sql);
+            // Thực thi câu lệnh SQL trả về đối tượng ResultSet.
         }
         
     }
