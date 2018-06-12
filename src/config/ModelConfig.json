@@ -1,6 +1,6 @@
 [
     {
-        "className": "Student",
+        "className": "student",
         "tableName" : "student",
         "properties": [
             {
