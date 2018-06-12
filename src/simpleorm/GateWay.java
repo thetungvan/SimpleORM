@@ -24,7 +24,7 @@ public abstract class GateWay {
         try {
             System.out.println("Name:" + tableName);
             String sql = "Select * from " + tableName ;
-
+            System.out.println(sql);
             // Thực thi câu lệnh SQL trả về đối tượng ResultSet.
             Connection conn = ConnectorFactory.getConnection();
             Statement statement = conn.createStatement();
@@ -105,35 +105,80 @@ public abstract class GateWay {
         
     }
     //update
-    public static void update(String tableName, String[] columns, Object[] values, Object condition) throws ClassNotFoundException {
-        if (columns.length == values.length)
+    public static void update(String tableName, String[] columns, Object[] values, String[] columncondition, Object[] condition) throws ClassNotFoundException {
+        if (columns.length == values.length && columncondition.length == condition.length)
         {
-            String sql = "UPDATE  " + tableName + " SET ";
-            for (int i = 0; i < columns.length; i++){
-                sql+= columns[i] + " = " + values[i] + ", ";
+            try {
+                String sql = "UPDATE  " + tableName + " SET ";
+                for (int i = 0; i < columns.length; i++){
+                    sql+= columns[i] + " = ?" + ", ";
+                }
+                
+                sql = sql.substring(0, sql.length() - 2);
+                sql += " WHERE ";
+                for(int i=0;i<columncondition.length;i++){
+                    sql += columncondition[i];
+                    sql += " = ? AND ";
+                }
+                sql = sql.substring(0, sql.length() - 4);
+                System.out.println(sql);
+                Connection conn = ConnectorFactory.getConnection();
+                PreparedStatement pstm = conn.prepareStatement(sql);
+                int count=0;
+                for(int i=0;i < columns.length; i++){
+                    pstm.setObject(i+1, values[i]);
+                    count++;
+                }
+                for(int i=0;i < columncondition.length; i++){
+                    pstm.setObject(i+count+1, condition[i]);
+                }
+                pstm.executeUpdate();
+                System.out.println("Update completed");
+                conn.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(GateWay.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
-            sql = sql.substring(0, sql.length() - 2);
-            sql += " WHERE " + condition;
-            System.out.println(sql);
-            // Thực thi câu lệnh SQL trả về đối tượng ResultSet.
         }
         
     }
     //delete
-    public static void delete(String tableName, String columns, String values) throws ClassNotFoundException {
+    public static void delete(String tableName, String[] columns, Object[] values) throws ClassNotFoundException {
+        if(columns.length == values.length){
+            try {
+                String sql = "DELETE FROM  " + tableName + " WHERE ";
+                for(int i=0;i<columns.length;i++){
+                    sql += columns[i];
+                    sql += " = ? AND ";
+                }
+                sql = sql.substring(0, sql.length() - 4);
+                System.out.println(sql);
+                Connection conn = ConnectorFactory.getConnection();
+                PreparedStatement pstm = conn.prepareStatement(sql);
+                for(int i=0;i < columns.length; i++){
+                    pstm.setObject(i+1, values[i]);
+                }
+                pstm.executeUpdate();
+                System.out.println("Delete completed");
+                conn.close();
+                // Thực thi câu lệnh SQL trả về đối tượng ResultSet.
+            } catch (SQLException ex) {
+                Logger.getLogger(GateWay.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+    }
+    
+    public static void DeleteAll(String tableName) throws ClassNotFoundException{
         try {
-            String sql = "DELETE FROM  " + tableName + " WHERE " + columns 
-                    + " = " + values;
-
-            // Thực thi câu lệnh SQL trả về đối tượng ResultSet.
-            Connection conn = ConnectionUtils.getMyConnection();
+            String sql = "DELETE FROM  " + tableName;
+            System.out.println(sql);
+            Connection conn = ConnectorFactory.getConnection();
             Statement statement = conn.createStatement();
-            statement.executeUpdate(sql);
+            int rowCount = statement.executeUpdate(sql);
+            System.out.println("Row Count affected = " + rowCount);
             conn.close();
         } catch (SQLException ex) {
             Logger.getLogger(GateWay.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
     }
 }
