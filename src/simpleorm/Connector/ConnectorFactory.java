@@ -54,6 +54,8 @@ public class ConnectorFactory {
         switch (connector) {
             case "mysql":
                 return MySQLConnector.getConnection(datasourceConfig);
+            case "postgresql":
+                return PostgresqlConnector.getConnection(datasourceConfig);
             default:
                 return null;
         }
