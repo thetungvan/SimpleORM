@@ -21,7 +21,7 @@ public class DataMapper<T> {
     private String className = "";
     private final Class<T> type;
     
-    public DataMapper(){/*
+    public DataMapper(Class<T> t){/*
         if (this.getClass().getSimpleName() != "DataMapper")
         {
             className = this.getClass().getSimpleName();
@@ -29,9 +29,13 @@ public class DataMapper<T> {
             System.out.println(className);
             //Class has names like 'StudentDataMapper' will become 'Student'
         }*/
-        this.type = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-        className = type.getClass().getSimpleName();
-        System.out.println(className);
+        this.type = t;
+        className = getMyType().getSimpleName();
+        System.out.println("Class name is : " + className);
+    }
+    
+    public Class<T> getMyType(){
+        return this.type;
     }
     
     public void setClassName(String input){
@@ -56,19 +60,22 @@ public class DataMapper<T> {
                         String type = fields[i].getType().getSimpleName();//attribute type
                         System.out.println(name + " : " + type);
                         }*/
-                    T newObject = getInstance();
+                    String strScr = getMyType().getName();
+                    Object newObject = Class.forName(strScr).newInstance();
                     Field[] fields = newObject.getClass().getDeclaredFields();
-                    int size_of_props = ModelMapper.modelConfigs.get(null).properties.size();
+                    
+                    int size_of_props = ModelMapper.modelConfigs.get(className).properties.size();
                     if (size_of_props != fields.length){
                         break;
                     }
                     for (int i = 0; i < fields.length; i++)
                     {
-                        Field f = newObject.getClass().getDeclaredField(fields[i].getType().getSimpleName());
+                        String fieldName = fields[i].getName();
+                        Field f = newObject.getClass().getDeclaredField(fieldName);
                         f.setAccessible(true);
-                        f.set(newObject, ModelMapper.modelConfigs.get(null).properties.get(i));
+                        f.set(newObject, resSet.getObject(fieldName));
                     }
-                    res.add(newObject);
+                    res.add((T) newObject);
                 }
                 return res;
             }
@@ -77,9 +84,9 @@ public class DataMapper<T> {
         }
         return null;
     }
-    public List<T> findByAttribute(String[] attr,String condition) throws Exception{
+    public List<T> findByAttribute(String collumnName,String condition) throws Exception{
         List<T> res = new ArrayList<>();
-        try (ResultSet resSet = GateWay.findByAttribute(className, attr, condition)){
+        try (ResultSet resSet = GateWay.findByAttribute(className, collumnName, condition)){
             while (resSet.next()){
                 T newObject = getInstance();
                 Field[] fields = newObject.getClass().getDeclaredFields();

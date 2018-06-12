@@ -37,7 +37,7 @@ public abstract class GateWay {
     //find by attribute(s)
     public static ResultSet findByAttribute(String tableName, String ColumnName, String Condition) throws ClassNotFoundException {
         try {
-            String fieldType = ModelMapper.modelConfigs.get("Student").properties.get(ColumnName).type;
+            String fieldType = ModelMapper.modelConfigs.get("student").properties.get(ColumnName).type;
             int inttype = Integer.parseInt(Condition);
             String sql = "Select * from " + tableName + " where " + ColumnName + " = ?";
             System.out.println(sql);
