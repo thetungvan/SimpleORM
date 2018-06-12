@@ -13,11 +13,12 @@ import java.util.Dictionary;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class MySQLConnector {
+public class MySQLConnector implements IConnector {
 
     // Kết nối vào SQLServer.
     // (Sử dụng thư viện điều khiển SQLJDBC)
-    public static Connection getConnection(Dictionary<String, String> config)
+    @Override
+    public Connection getConnection(Dictionary<String, String> config)
             throws SQLException, ClassNotFoundException {
 
         String hostName = config.get("hostName");
@@ -31,16 +32,17 @@ public class MySQLConnector {
                 database, userName, password, portNumber);
     }
 
-    public static Connection getConnection(String hostName,
+    @Override
+    public Connection getConnection(String hostName,
             String instanceName, String database, String userName,
             String password, String portNumber) throws ClassNotFoundException, SQLException {
         try {
             // Connection class
             Class.forName("com.mysql.jdbc.Driver").newInstance();
 
-            String connectionURL = "jdbc:mysql://" + hostName + ":" + portNumber+"/"+database;
+            String connectionURL = "jdbc:mysql://" + hostName + ":" + portNumber + "/" + database;
 
-            Connection conn = DriverManager.getConnection(connectionURL,userName,password);
+            Connection conn = DriverManager.getConnection(connectionURL, userName, password);
             return conn;
         } catch (InstantiationException | IllegalAccessException ex) {
             Logger.getLogger(MySQLConnector.class.getName()).log(Level.SEVERE, null, ex);

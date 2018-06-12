@@ -16,8 +16,10 @@ import java.util.logging.Logger;
  *
  * @author NhoxToong
  */
-public class PostgresqlConnector {
-    public static Connection getConnection(Dictionary<String, String> config)
+public class PostgresqlConnector implements IConnector {
+
+    @Override
+    public Connection getConnection(Dictionary<String, String> config)
             throws SQLException, ClassNotFoundException {
 
         String hostName = config.get("hostName");
@@ -31,16 +33,17 @@ public class PostgresqlConnector {
                 database, userName, password, portNumber);
     }
 
-    public static Connection getConnection(String hostName,
+    @Override
+    public Connection getConnection(String hostName,
             String instanceName, String database, String userName,
             String password, String portNumber) throws ClassNotFoundException, SQLException {
         try {
             // Connection class
             Class.forName("org.postgresql.Driver").newInstance();
 
-            String connectionURL = "jdbc:postgresql://" + hostName + ":" + portNumber+"/"+database;
+            String connectionURL = "jdbc:postgresql://" + hostName + ":" + portNumber + "/" + database;
 
-            Connection conn = DriverManager.getConnection(connectionURL,userName,password);
+            Connection conn = DriverManager.getConnection(connectionURL, userName, password);
             return conn;
         } catch (InstantiationException | IllegalAccessException ex) {
             Logger.getLogger(MySQLConnector.class.getName()).log(Level.SEVERE, null, ex);
