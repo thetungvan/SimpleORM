@@ -34,14 +34,16 @@ public class SimpleORM {
             ModelMapper.load("/config/ModelConfig.json");
             String fieldType = ModelMapper.modelConfigs.get("student").properties.get("ID").type;
             System.out.println(fieldType);
-            String[] columns = {"ID","name"};
-            Object[] values = {1412410,"SI Phu"};
-            String condition = "Id= ahihi";
-            GateWay.update("student", columns, values, condition);
+            String[] columns = {"name"};
+            Object[] values = {"Toong"};
+            String[] columncondition={"ID"};
+            Object[] condition = {1412557};
+            //GateWay.DeleteAll("student");
+            //GateWay.update("student", columns, values, columncondition,condition);
             //GateWay.insert("student",columns,values);
-            //ResultSet rs = GateWay.findByAttribute("student", "ID", 1412410);
+            /*ResultSet rs = GateWay.findByAttribute("student", "ID", 1412557);
             //DataMapper<student> newDM = new DataMapper<student>(student.class);
-            /*while (rs.next()) {// Di chuyển con trỏ xuống bản ghi kế tiếp.
+            while (rs.next()) {// Di chuyển con trỏ xuống bản ghi kế tiếp.
                 int MAHS = rs.getInt(1);
                 String ten = rs.getString(2);
                 System.out.println("--------------------");
