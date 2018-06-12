@@ -1,0 +1,9 @@
+{
+    "connector": "postgresql",
+    "hostName": "stampy.db.elephantsql.com",
+    "database": "matyzdqt",
+    "userName": "matyzdqt",
+    "password": "RUV-zta7sFOXrZHkVfezPo22bXo5qAuK",
+    "portNumber": "5432",
+    "instanceName": ""
+}

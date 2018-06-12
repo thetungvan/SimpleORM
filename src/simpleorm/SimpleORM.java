@@ -27,10 +27,10 @@ public class SimpleORM {
      * @param args the command line arguments
      * @throws java.lang.ClassNotFoundException
      */
-    public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+    public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, SQLException {
         // TODO code application logic here
         try {
-            ConnectorFactory.loadDatasourceConfig("/simpleorm/Connector/datasource.json");
+            ConnectorFactory.loadDatasourceConfig("/simpleorm/Connector/postgresqlsource.json");
             ModelMapper.load("/config/ModelConfig.json");
             String fieldType = ModelMapper.modelConfigs.get("student").properties.get("ID").type;
             System.out.println(fieldType);
@@ -38,9 +38,6 @@ public class SimpleORM {
             //GateWay.update("student", columns, values, condition);
             //GateWay.insert("student",columns,values);
             //ResultSet rs = GateWay.findByAttribute("student", "ID", 1412410);
-            
-            
-            
             //GateWay.DeleteAll("student");
             //GateWay.update("student", columns, values, columncondition,condition);
             DataMapper<student> newDM = new DataMapper<student>(student.class);
