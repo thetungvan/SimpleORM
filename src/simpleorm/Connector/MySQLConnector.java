@@ -38,10 +38,9 @@ public class MySQLConnector {
             // Connection class
             Class.forName("com.mysql.jdbc.Driver").newInstance();
 
-            String connectionURL = "jdbc:mysql://" + hostName + ":" + portNumber
-                    + "?user=" + userName + "&password=" + password;
+            String connectionURL = "jdbc:mysql://" + hostName + ":" + portNumber+"/"+database;
 
-            Connection conn = DriverManager.getConnection(connectionURL);
+            Connection conn = DriverManager.getConnection(connectionURL,userName,password);
             return conn;
         } catch (InstantiationException | IllegalAccessException ex) {
             Logger.getLogger(MySQLConnector.class.getName()).log(Level.SEVERE, null, ex);

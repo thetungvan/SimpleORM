@@ -24,6 +24,7 @@ public class DataMapper<T> {
     public DataMapper(){
         if (this.getClass().getSimpleName() != "DataMapper")
         {
+            
             className = this.getClass().getSimpleName();
             className.substring(0, className.length() - 10);
             System.out.println(className);
@@ -73,7 +74,7 @@ public class DataMapper<T> {
     }
     public List<T> findByAttribute(String[] attr,String condition) throws Exception{
         List<T> res = new ArrayList<>();
-        try (ResultSet resSet = GateWay.findByAttribute(className, attr, condition)){
+        try (ResultSet resSet = GateWay.findByAttribute(className, "string", condition)){
             while (resSet.next()){
                 T newObject = getInstance();
                 Field[] fields = newObject.getClass().getDeclaredFields();

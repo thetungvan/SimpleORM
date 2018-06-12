@@ -5,30 +5,29 @@
  */
 package simpleorm;
 
+import config.ModelMapper;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import simpleorm.Connector.ConnectionUtils;
+import simpleorm.Connector.ConnectorFactory;
 
 public abstract class GateWay {
 
     //find allby table's name
-    public ResultSet findAll(String tableName) throws ClassNotFoundException {
+    public static ResultSet findAll(String tableName) throws ClassNotFoundException {
         try {
             System.out.println("Name:" + tableName);
-            String sql = "Select * from " + tableName;
+            String sql = "Select * from " + tableName ;
 
             // Thực thi câu lệnh SQL trả về đối tượng ResultSet.
-            Connection conn = ConnectionUtils.getMyConnection();
+            Connection conn = ConnectorFactory.getConnection();
             Statement statement = conn.createStatement();
             ResultSet rs = statement.executeQuery(sql);
-            if (conn != null)
-                conn.close();
-            if (statement != null)
-                statement.close();
             return rs;
         } catch (SQLException ex) {
             Logger.getLogger(GateWay.class.getName()).log(Level.SEVERE, null, ex);
@@ -36,24 +35,19 @@ public abstract class GateWay {
         return null;
     }
     //find by attribute(s)
-    public ResultSet findByAttribute(String tableName, String[] attr, String condition) throws ClassNotFoundException {
+    public static ResultSet findByAttribute(String tableName, String ColumnName, String Condition) throws ClassNotFoundException {
         try {
-            String sql = "Select ";
-            for (String single_attr : attr){
-                sql += single_attr;
-                sql += ",";
-            }
-            sql.substring(0, sql.length() - 1);
-            
-            sql+= " From " + tableName + " WHERE " + condition;
+            String fieldType = ModelMapper.modelConfigs.get("Student").properties.get(ColumnName).type;
+            int inttype = Integer.parseInt(Condition);
+            String sql = "Select * from " + tableName + " where " + ColumnName + " = ?";
+            System.out.println(sql);
             // Thực thi câu lệnh SQL trả về đối tượng ResultSet.
             Connection conn = ConnectionUtils.getMyConnection();
-            Statement statement = conn.createStatement();
-            ResultSet rs = statement.executeQuery(sql);
-            if (conn != null)
-                conn.close();
-            if (statement != null)
-                statement.close();
+            
+            PreparedStatement pstm = conn.prepareStatement(sql);
+            
+            pstm.setInt(1, inttype);
+            ResultSet rs = pstm.executeQuery();
             return rs;
         } catch (SQLException ex) {
             Logger.getLogger(GateWay.class.getName()).log(Level.SEVERE, null, ex);
@@ -62,7 +56,7 @@ public abstract class GateWay {
         
     }
     //insert
-    public void insert(String tableName, String[] columns, String[] values) throws ClassNotFoundException {
+    public static void insert(String tableName, String[] columns, String[] values) throws ClassNotFoundException {
         try {
             if (columns.length == values.length)
             {
@@ -86,10 +80,7 @@ public abstract class GateWay {
                 Connection conn = ConnectionUtils.getMyConnection();
                 Statement statement = conn.createStatement();
                 statement.executeUpdate(sql);
-                if (conn != null)
-                    conn.close();
-                if (statement != null)
-                    statement.close();
+                conn.close();
             }
         } catch (SQLException ex) {
             Logger.getLogger(GateWay.class.getName()).log(Level.SEVERE, null, ex);
@@ -97,7 +88,7 @@ public abstract class GateWay {
         
     }
     //update
-    public void update(String tableName, String[] columns, String[] values, String condition) throws ClassNotFoundException {
+    public static void update(String tableName, String[] columns, String[] values, String condition) throws ClassNotFoundException {
         try {
             if (columns.length == values.length)
             {
@@ -113,10 +104,7 @@ public abstract class GateWay {
                 Connection conn = ConnectionUtils.getMyConnection();
                 Statement statement = conn.createStatement();
                 statement.executeUpdate(sql);
-                if (conn != null)
-                    conn.close();
-                if (statement != null)
-                    statement.close();
+                conn.close();
             }
         } catch (SQLException ex) {
             Logger.getLogger(GateWay.class.getName()).log(Level.SEVERE, null, ex);
@@ -124,7 +112,7 @@ public abstract class GateWay {
         
     }
     //delete
-    public void delete(String tableName, String columns, String values) throws ClassNotFoundException {
+    public static void delete(String tableName, String columns, String values) throws ClassNotFoundException {
         try {
             String sql = "DELETE FROM  " + tableName + " WHERE " + columns 
                     + " = " + values;
@@ -133,10 +121,7 @@ public abstract class GateWay {
             Connection conn = ConnectionUtils.getMyConnection();
             Statement statement = conn.createStatement();
             statement.executeUpdate(sql);
-            if (conn != null)
-                conn.close();
-            if (statement != null)
-                statement.close();
+            conn.close();
         } catch (SQLException ex) {
             Logger.getLogger(GateWay.class.getName()).log(Level.SEVERE, null, ex);
         }

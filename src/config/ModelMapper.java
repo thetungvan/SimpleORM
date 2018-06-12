@@ -38,13 +38,13 @@ public class ModelMapper {
 
         JSONArray modelConfigData = new JSONArray(fileContent);
         for (int i = 0; i < modelConfigData.length(); i++) {
-            List<ModelProperty> properties = new ArrayList<ModelProperty>();
+            Dictionary<String, ModelProperty> properties = new Hashtable();
             JSONArray modelProperties = modelConfigData.getJSONObject(i).getJSONArray("properties");
             for (int j = 0; j < modelProperties.length(); j++) {
                 String name = modelProperties.getJSONObject(j).getString("name");
                 String type = modelProperties.getJSONObject(j).getString("type");
                 Boolean primary = modelProperties.getJSONObject(j).getBoolean("primary");
-                properties.add(new ModelProperty(name, type, primary));
+                properties.put(name,new ModelProperty(name, type, primary));
             }
 
             String className = modelConfigData.getJSONObject(i).getString("className");
