@@ -21,15 +21,21 @@ public class DataMapper<T> {
     private String className = "";
     private final Class<T> type;
     
-    public DataMapper(){
+    public DataMapper(){/*
         if (this.getClass().getSimpleName() != "DataMapper")
         {
             className = this.getClass().getSimpleName();
             className.substring(0, className.length() - 10);
             System.out.println(className);
             //Class has names like 'StudentDataMapper' will become 'Student'
-        }
+        }*/
         this.type = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+        className = type.getClass().getSimpleName();
+        System.out.println(className);
+    }
+    
+    public void setClassName(String input){
+        this.className = input;
     }
     
     public T getInstance() throws Exception {
