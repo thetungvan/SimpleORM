@@ -42,9 +42,6 @@ public class DataMapper<T> {
         this.className = input;
     }
     
-    public T getInstance() throws Exception {
-        return type.newInstance();
-    }
     
     
     public List<T> findAll() throws Exception{
@@ -111,9 +108,33 @@ public class DataMapper<T> {
         return null;
     }
     
-    public void insert(String[] columns, Object[] values){
-        try {
-            GateWay.insert(className, columns, values);
+    public void insert(T input){ try {
+        //String[] columns, Object[] values){
+        Field[] fields = input.getClass().getDeclaredFields();
+        int size = fields.length;
+        String[] columns = new String[size];
+        Object[] values = new Object[size];
+        
+        for (int i = 0; i < fields.length; i++){
+            try {
+                columns[i] = fields[i].getName();
+                String fieldName = fields[i].getName();
+                Field f = input.getClass().getDeclaredField(fieldName);
+                f.setAccessible(true);
+                try {
+                    values[i] = f.get(input);
+                } catch (IllegalArgumentException ex) {
+                    Logger.getLogger(DataMapper.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IllegalAccessException ex) {
+                    Logger.getLogger(DataMapper.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } catch (NoSuchFieldException ex) {
+                Logger.getLogger(DataMapper.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SecurityException ex) {
+                Logger.getLogger(DataMapper.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        GateWay.insert(className, columns, values);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(DataMapper.class.getName()).log(Level.SEVERE, null, ex);
         }
