@@ -16,15 +16,12 @@ import java.util.logging.Logger;
 import simpleorm.Connector.ConnectionUtils;
 import simpleorm.Connector.ConnectorFactory;
 
-
 public abstract class GateWay {
 
     //find allby table's name
     public static ResultSet findAll(String tableName) throws ClassNotFoundException {
         try {
-            System.out.println("Name:" + tableName);
-            String sql = "Select * from " + tableName ;
-            System.out.println(sql);
+            String sql = "Select * from " + tableName;
             // Thực thi câu lệnh SQL trả về đối tượng ResultSet.
             Connection conn = ConnectorFactory.getConnection();
             Statement statement = conn.createStatement();
@@ -35,65 +32,53 @@ public abstract class GateWay {
         }
         return null;
     }
+
     //find by attribute(s)
     public static ResultSet findByAttribute(String tableName, String ColumnName, Object Condition) throws ClassNotFoundException {
         try {
             String sql = "Select * from " + tableName + " where " + ColumnName + " = ?";
-            System.out.println(sql);
             // Thực thi câu lệnh SQL trả về đối tượng ResultSet.
             Connection conn = ConnectorFactory.getConnection();
-            
+
             PreparedStatement pstm = conn.prepareStatement(sql);
             pstm.setObject(1, Condition);
-            
+
             ResultSet rs = pstm.executeQuery();
             return rs;
         } catch (SQLException ex) {
             Logger.getLogger(GateWay.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
-        
+
     }
+
     //insert
     public static void insert(String tableName, String[] columns, Object[] values) throws ClassNotFoundException {
-        if (columns.length == values.length)
-        {
+        if (columns.length == values.length) {
             try {
                 String sql = "INSERT INTO " + tableName + "(";
-                for (String single_com : columns){
+                for (String single_com : columns) {
                     sql += single_com;
                     sql += ",";
                 }
                 sql = sql.substring(0, sql.length() - 1);
                 sql += ") VALUES (";
-                
-                for (Object single_val : values){
+
+                for (Object single_val : values) {
                     sql += '?';
                     sql += ",";
                 }
-                
+
                 sql = sql.substring(0, sql.length() - 1);
                 sql += ")";
-                
-                
-                System.out.println(sql);
+
                 // Thực thi câu lệnh SQL trả về đối tượng ResultSet.
                 Connection conn = ConnectorFactory.getConnection();
                 PreparedStatement pstm = conn.prepareStatement(sql);
-                for(int i =0;i<columns.length;i++){
-                    String fieldType=ModelMapper.modelConfigs.get(tableName).properties.get(columns[i]).type;
-                    /*if(fieldType.equals("int")){
-                        int inttype = Integer.parseInt(values[i]);
-                        pstm.setInt(i+1, inttype);
-                        System.out.println(inttype);
-                    }
-                    else if(fieldType.equals("String")){
-                        pstm.setString(i+1, values[i]);
-                        System.out.println(values[i]);
-                    }*/
-                    pstm.setObject(i+1, values[i]);
-                    
-                    
+                for (int i = 0; i < columns.length; i++) {
+                    String fieldType = ModelMapper.modelConfigs.get(tableName).properties.get(columns[i]).type;
+                    pstm.setObject(i + 1, values[i]);
+
                 }
                 pstm.executeUpdate();
                 System.out.println("Insert completed");
@@ -102,35 +87,34 @@ public abstract class GateWay {
                 Logger.getLogger(GateWay.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
+
     }
+
     //update
     public static void update(String tableName, String[] columns, Object[] values, String[] columncondition, Object[] condition) throws ClassNotFoundException {
-        if (columns.length == values.length && columncondition.length == condition.length)
-        {
+        if (columns.length == values.length && columncondition.length == condition.length) {
             try {
                 String sql = "UPDATE  " + tableName + " SET ";
-                for (int i = 0; i < columns.length; i++){
-                    sql+= columns[i] + " = ?" + ", ";
+                for (int i = 0; i < columns.length; i++) {
+                    sql += columns[i] + " = ?" + ", ";
                 }
-                
+
                 sql = sql.substring(0, sql.length() - 2);
                 sql += " WHERE ";
-                for(int i=0;i<columncondition.length;i++){
+                for (int i = 0; i < columncondition.length; i++) {
                     sql += columncondition[i];
                     sql += " = ? AND ";
                 }
                 sql = sql.substring(0, sql.length() - 4);
-                System.out.println(sql);
                 Connection conn = ConnectorFactory.getConnection();
                 PreparedStatement pstm = conn.prepareStatement(sql);
-                int count=0;
-                for(int i=0;i < columns.length; i++){
-                    pstm.setObject(i+1, values[i]);
+                int count = 0;
+                for (int i = 0; i < columns.length; i++) {
+                    pstm.setObject(i + 1, values[i]);
                     count++;
                 }
-                for(int i=0;i < columncondition.length; i++){
-                    pstm.setObject(i+count+1, condition[i]);
+                for (int i = 0; i < columncondition.length; i++) {
+                    pstm.setObject(i + count + 1, condition[i]);
                 }
                 pstm.executeUpdate();
                 System.out.println("Update completed");
@@ -139,23 +123,23 @@ public abstract class GateWay {
                 Logger.getLogger(GateWay.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
+
     }
+
     //delete
     public static void delete(String tableName, String[] columns, Object[] values) throws ClassNotFoundException {
-        if(columns.length == values.length){
+        if (columns.length == values.length) {
             try {
                 String sql = "DELETE FROM  " + tableName + " WHERE ";
-                for(int i=0;i<columns.length;i++){
+                for (int i = 0; i < columns.length; i++) {
                     sql += columns[i];
                     sql += " = ? AND ";
                 }
                 sql = sql.substring(0, sql.length() - 4);
-                System.out.println(sql);
                 Connection conn = ConnectorFactory.getConnection();
                 PreparedStatement pstm = conn.prepareStatement(sql);
-                for(int i=0;i < columns.length; i++){
-                    pstm.setObject(i+1, values[i]);
+                for (int i = 0; i < columns.length; i++) {
+                    pstm.setObject(i + 1, values[i]);
                 }
                 pstm.executeUpdate();
                 System.out.println("Delete completed");
@@ -165,13 +149,12 @@ public abstract class GateWay {
                 Logger.getLogger(GateWay.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
+
     }
-    
-    public static void DeleteAll(String tableName) throws ClassNotFoundException{
+
+    public static void DeleteAll(String tableName) throws ClassNotFoundException {
         try {
             String sql = "DELETE FROM  " + tableName;
-            System.out.println(sql);
             Connection conn = ConnectorFactory.getConnection();
             Statement statement = conn.createStatement();
             int rowCount = statement.executeUpdate(sql);
