@@ -9,42 +9,41 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.lang.*;
+import java.util.Dictionary;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Connector {
+public class MySQLConnector {
 
     // Kết nối vào SQLServer.
     // (Sử dụng thư viện điều khiển SQLJDBC)
-    public static Connection getConnection()
+    public static Connection getConnection(Dictionary<String, String> config)
             throws SQLException, ClassNotFoundException {
-        String hostName = "sql12.freemysqlhosting.net";
-        String sqlInstanceName = "DESKTOP-1TK54IB\\SQLEXPRESS";
-        String database = "sql12242253";
-        String userName = "sql12242253";
-        String password = "McKznSF2Lf";
-        String portNumber = "3306";
 
-        return getConnection(hostName, sqlInstanceName,
+        String hostName = config.get("hostName");
+        String instanceName = config.get("instanceName");
+        String database = config.get("database");
+        String userName = config.get("userName");
+        String password = config.get("password");
+        String portNumber = config.get("portNumber");
+
+        return getConnection(hostName, instanceName,
                 database, userName, password, portNumber);
     }
 
-    // Trường hợp sử dụng SQLServer.
-    // Và thư viện SQLJDBC.
     public static Connection getConnection(String hostName,
-            String sqlInstanceName, String database, String userName,
+            String instanceName, String database, String userName,
             String password, String portNumber) throws ClassNotFoundException, SQLException {
         try {
             // Connection class
             Class.forName("com.mysql.jdbc.Driver").newInstance();
 
-            String connectionURL = "jdbc:mysql://" + hostName + ":" + portNumber
-                    + "?user=" + userName + "&password=" + password;
+            String connectionURL = "jdbc:mysql://" + hostName + ":" + portNumber+"/"+database;
 
-            Connection conn = DriverManager.getConnection(connectionURL);
+            Connection conn = DriverManager.getConnection(connectionURL,userName,password);
             return conn;
         } catch (InstantiationException | IllegalAccessException ex) {
-            Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MySQLConnector.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }

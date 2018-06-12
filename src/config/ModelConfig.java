@@ -15,9 +15,9 @@ public class ModelConfig {
 
     public String className;
     public String tablename;
-    public List<ModelProperty> properties = new ArrayList<ModelProperty>();
+    public Dictionary<String,ModelProperty> properties = new Hashtable();
 
-    public ModelConfig(String className, String tableName, List<ModelProperty> props) {
+    public ModelConfig(String className, String tableName, Dictionary<String, ModelProperty> props) {
         this.className = className;
         this.tablename = tableName;
         this.properties = props;
