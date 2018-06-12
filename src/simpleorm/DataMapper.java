@@ -111,7 +111,7 @@ public class DataMapper<T> {
         return null;
     }
     
-    public void insert(String[] columns, String[] values){
+    public void insert(String[] columns, Object[] values){
         try {
             GateWay.insert(className, columns, values);
         } catch (ClassNotFoundException ex) {
