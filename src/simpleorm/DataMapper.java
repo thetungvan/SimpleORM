@@ -21,21 +21,13 @@ public class DataMapper<T> {
     private String className = "";
     private final Class<T> type;
     
-<<<<<<< HEAD
     public DataMapper(){/*
         if (this.getClass().getSimpleName() != "DataMapper")
         {
-=======
-    public DataMapper(){
-        if (this.getClass().getSimpleName() != "DataMapper")
-        {
-            
->>>>>>> b8f575cef88d001f05d729d89dbe896c3076b1fa
             className = this.getClass().getSimpleName();
             className.substring(0, className.length() - 10);
             System.out.println(className);
             //Class has names like 'StudentDataMapper' will become 'Student'
-<<<<<<< HEAD
         }*/
         this.type = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
         className = type.getClass().getSimpleName();
@@ -44,10 +36,6 @@ public class DataMapper<T> {
     
     public void setClassName(String input){
         this.className = input;
-=======
-        }
-        this.type = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
->>>>>>> b8f575cef88d001f05d729d89dbe896c3076b1fa
     }
     
     public T getInstance() throws Exception {
@@ -91,11 +79,7 @@ public class DataMapper<T> {
     }
     public List<T> findByAttribute(String[] attr,String condition) throws Exception{
         List<T> res = new ArrayList<>();
-<<<<<<< HEAD
         try (ResultSet resSet = GateWay.findByAttribute(className, attr, condition)){
-=======
-        try (ResultSet resSet = GateWay.findByAttribute(className, "string", condition)){
->>>>>>> b8f575cef88d001f05d729d89dbe896c3076b1fa
             while (resSet.next()){
                 T newObject = getInstance();
                 Field[] fields = newObject.getClass().getDeclaredFields();
