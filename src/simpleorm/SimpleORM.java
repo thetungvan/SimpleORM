@@ -8,6 +8,7 @@ package simpleorm;
 import config.ModelMapper;
 import java.io.FileNotFoundException;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,8 +30,16 @@ public class SimpleORM {
         try {
             ConnectorFactory.loadDatasourceConfig("/simpleorm/Connector/datasource.json");
             ModelMapper.load("/config/ModelConfig.json");
-            Connection conn = ConnectorFactory.getConnection();
-            System.out.println(ModelMapper.get());
+            String fieldType = ModelMapper.modelConfigs.get("Student").properties.get("ID").type;
+            System.out.println(fieldType);
+            ResultSet rs = GateWay.findByAttribute("student", "ID", "1412628");
+            while (rs.next()) {// Di chuyển con trỏ xuống bản ghi kế tiếp.
+                int MAHS = rs.getInt(1);
+                String ten = rs.getString(2);
+                System.out.println("--------------------");
+                System.out.println("EmpId:" + MAHS);
+                System.out.println("EmpNo:" + ten);
+            }
 
         } catch (FileNotFoundException | SQLException ex) {
             Logger.getLogger(SimpleORM.class.getName()).log(Level.SEVERE, null, ex);
