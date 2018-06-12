@@ -45,7 +45,7 @@ public class SimpleORM {
             System.out.println("----insert------------");
             String[] columns = {"ID","name"};
             Object[] values = {343434,"SmileyFace"};
-            newDM.insert(columns, values);
+            //newDM.insert(columns, values);
             
             try {
                 resList = newDM.findAll();
@@ -60,7 +60,7 @@ public class SimpleORM {
             
             
             try {
-                resList = newDM.findByAttribute("ID", "1412563");
+                resList = newDM.findByAttribute("ID", "343434");
                 System.out.println("------findByAttribute-----------------");
                 for (int i = 0; i < resList.size() ; i++)
                 {
