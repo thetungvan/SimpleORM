@@ -134,4 +134,12 @@ public class DataMapper<T> {
             Logger.getLogger(DataMapper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public void deleteAll(){
+        try {
+            GateWay.DeleteAll(className);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(DataMapper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

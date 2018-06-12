@@ -38,14 +38,42 @@ public class SimpleORM {
             //GateWay.update("student", columns, values, condition);
             //GateWay.insert("student",columns,values);
             //ResultSet rs = GateWay.findByAttribute("student", "ID", 1412410);
+            
+            
+            
+            //GateWay.DeleteAll("student");
+            //GateWay.update("student", columns, values, columncondition,condition);
             DataMapper<student> newDM = new DataMapper<student>(student.class);
             System.out.println("-----------------DATAMAPPER TEST--------------------");
             List<student> resList = new ArrayList<>();
             
+            //DELETE
+            /*
+            String[] columns = {"name"};//column's name to search for value
+            String[] values ={"Smileyface2"};//value to search for deleting
+            newDM.delete(columns, values);
+            */
+            
+            //DELETE ALL
+            //newDM.deleteAll();
+            
+            //UPDATE
+            /*
+            String[] columns = {"name"};
+            Object[] values = {"SmileyFace2"};//collum to change
+            String[] columncondition={"ID"};
+            Object[] condition = {343434};
+            newDM.update(columns, values, columncondition, condition);
+            */
+            
+            
+            //INSERT
+            /*
             System.out.println("----insert------------");
             String[] columns = {"ID","name"};
             Object[] values = {343434,"SmileyFace"};
-            //newDM.insert(columns, values);
+            newDM.insert(columns, values);
+            */
             
             try {
                 resList = newDM.findAll();
