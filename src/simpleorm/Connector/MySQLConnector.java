@@ -13,24 +13,7 @@ import java.util.Dictionary;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class MySQLConnector implements IConnector {
-
-    // Kết nối vào SQLServer.
-    // (Sử dụng thư viện điều khiển SQLJDBC)
-    @Override
-    public Connection getConnection(Dictionary<String, String> config)
-            throws SQLException, ClassNotFoundException {
-
-        String hostName = config.get("hostName");
-        String instanceName = config.get("instanceName");
-        String database = config.get("database");
-        String userName = config.get("userName");
-        String password = config.get("password");
-        String portNumber = config.get("portNumber");
-
-        return getConnection(hostName, instanceName,
-                database, userName, password, portNumber);
-    }
+public class MySQLConnector extends Connector {
 
     @Override
     public Connection getConnection(String hostName,

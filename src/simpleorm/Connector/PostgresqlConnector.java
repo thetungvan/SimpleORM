@@ -16,22 +16,7 @@ import java.util.logging.Logger;
  *
  * @author NhoxToong
  */
-public class PostgresqlConnector implements IConnector {
-
-    @Override
-    public Connection getConnection(Dictionary<String, String> config)
-            throws SQLException, ClassNotFoundException {
-
-        String hostName = config.get("hostName");
-        String instanceName = config.get("instanceName");
-        String database = config.get("database");
-        String userName = config.get("userName");
-        String password = config.get("password");
-        String portNumber = config.get("portNumber");
-
-        return getConnection(hostName, instanceName,
-                database, userName, password, portNumber);
-    }
+public class PostgresqlConnector extends Connector {
 
     @Override
     public Connection getConnection(String hostName,
